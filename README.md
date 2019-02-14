@@ -2,6 +2,35 @@
 
 ## Benchmarks
 
+### linux/amd64
+```
+goos: linux
+goarch: amd64
+pkg: github.com/rasa/HashCompare
+BenchmarkHighwayHash256             3000            524402 ns/op        9997.81 MB/s
+BenchmarkHighwayHash128             3000            520288 ns/op       10076.88 MB/s
+BenchmarkHighwayHash64              3000            521226 ns/op       10058.73 MB/s
+BenchmarkSHA1                        200           8121908 ns/op         645.52 MB/s
+BenchmarkMD5                         100          10701400 ns/op         489.92 MB/s
+BenchmarkSHA512                      100          13898923 ns/op         377.21 MB/s
+BenchmarkSHA256                       50          20666619 ns/op         253.69 MB/s
+BenchmarkCRC32                      3000            414989 ns/op       12633.77 MB/s
+BenchmarkCRC64                       300           4468411 ns/op        1173.32 MB/s
+BenchmarkAdler32                     500           3319928 ns/op        1579.21 MB/s
+BenchmarkFNV32                       200           8635113 ns/op         607.16 MB/s
+BenchmarkFNV64                       200           8627604 ns/op         607.69 MB/s
+BenchmarkFNV128                       30          40118174 ns/op         130.69 MB/s
+BenchmarkCespareXxhash              3000            583203 ns/op        8989.79 MB/s
+BenchmarkShivakarXxhash             2000            803798 ns/op        6522.63 MB/s
+BenchmarkSiphash64                   500           3191907 ns/op        1642.55 MB/s
+BenchmarkSiphash128                  500           3152087 ns/op        1663.30 MB/s
+BenchmarkBlake2b512                  200           7514887 ns/op         697.67 MB/s
+BenchmarkBlake2b256                  200           7484024 ns/op         700.54 MB/s
+PASS
+ok      github.com/rasa/HashCompare     36.085s
+```
+
+## windows/amd64
 ```
 goos: windows
 goarch: amd64
@@ -19,7 +48,7 @@ BenchmarkAdler32-8                  1000           2323132 ns/op        2256.81 
 BenchmarkFNV32-8                     200           6030345 ns/op         869.42 MB/s
 BenchmarkFNV64-8                     200           6050346 ns/op         866.54 MB/s
 BenchmarkFNV128-8                     50          25141438 ns/op         208.54 MB/s
-BenchmarkCespareXxhash-8            3000            437691 ns/op        11978.48 MB/s
+BenchmarkCespareXxhash-8            3000            437691 ns/op       11978.48 MB/s
 BenchmarkShivakarXxhash-8           3000            604701 ns/op        8670.20 MB/s
 BenchmarkSiphash64-8                 500           2476141 ns/op        2117.36 MB/s
 BenchmarkSiphash128-8                500           2482142 ns/op        2112.24 MB/s
