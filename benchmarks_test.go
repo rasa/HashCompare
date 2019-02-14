@@ -25,6 +25,8 @@ import (
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Cyclic_redundancy_checks
 	"hash/crc32"
 	"hash/crc64"
+	// https://en.wikipedia.org/wiki/List_of_hash_functions#Checksums
+	"hash/adler32"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions
 	"github.com/cespare/xxhash"
 	"hash/fnv"
@@ -192,6 +194,14 @@ func crc64New() hash.Hash {
 
 func BenchmarkCRC64(b *testing.B) {
 	benchmarkHash(b, crc64New)
+}
+
+func adler32New() hash.Hash {
+	return adler32.New()
+}
+
+func BenchmarkAdler32(b *testing.B) {
+	benchmarkHash(b, adler32New)
 }
 
 func fnvNew32() hash.Hash {

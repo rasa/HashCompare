@@ -20,6 +20,8 @@ import (
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Cyclic_redundancy_checks
 	"hash/crc32"
 	"hash/crc64"
+	// https://en.wikipedia.org/wiki/List_of_hash_functions#Checksums
+	"hash/adler32"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions
 	"github.com/cespare/xxhash"
 	"hash/fnv"
@@ -119,6 +121,14 @@ func CRC64(buf []byte) []byte {
 	return sum
 }
 
+func Adler32(buf []byte) []byte {
+	h := adler32.New()
+	h.Reset()
+	h.Write(buf[:])
+	sum := h.Sum(nil)
+	return sum
+}
+
 func FNV32(buf []byte) []byte {
 	h := fnv.New32()
 	h.Reset()
@@ -209,6 +219,8 @@ func TestHashPermutationsRange(msg []byte, key [32]byte, cpu int, cpuShift uint,
 				tag = CRC32(msg)
 			case "crc64":
 				tag = CRC64(msg)
+			case "adler32":
+				tag = Adler32(msg)
 			case "fnv32":
 				tag = FNV32(msg)
 			case "fnv64":
@@ -217,6 +229,9 @@ func TestHashPermutationsRange(msg []byte, key [32]byte, cpu int, cpuShift uint,
 				tag = FNV128(msg)
 			case "xxhash":
 				tag = Xxhash(msg)
+			default:
+				fmt.Printf("unknown hash: %s\n", algo)
+				os.Exit(1)
 			}
 
 			keys = append(keys, tag)
@@ -372,17 +387,20 @@ func permuteAlgorithm(algo string) {
 }
 
 func main() {
-
+	for _, arg := range os.Args[1:] {
+		permuteAlgorithm(arg)
+	}
 	//permuteAlgorithm("blake2b")
 	//permuteAlgorithm("blake2b-256")
 	//permuteAlgorithm("poly1305")
 	//permuteAlgorithm("siphash")
-	permuteAlgorithm("highwayhash256")
+	//permuteAlgorithm("highwayhash256")
 	//	permuteAlgorithm("highwayhash128")
 	//permuteAlgorithm("highwayhash64")
 	//permuteAlgorithm("crc32")
 	//permuteAlgorithm("crc64")
+	//permuteAlgorithm("adler32")
 	//permuteAlgorithm("fnv32")
 	//permuteAlgorithm("fnv128")
-	permuteAlgorithm("xxhash")
+	//permuteAlgorithm("xxhash")
 }
