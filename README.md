@@ -49,7 +49,7 @@ BenchmarkAdler32                    1000           2323132 ns/op        2256.81 
 BenchmarkFNV32                       200           6040345 ns/op         867.98 MB/s
 BenchmarkFNV64                       200           6040345 ns/op         867.98 MB/s
 BenchmarkFNV128                       50          25141438 ns/op         208.54 MB/s
-BenchmarkCespareXxhash              5000            391022 ns/op        13408.13 MB/s
+BenchmarkCespareXxhash              5000            391022 ns/op       13408.13 MB/s
 BenchmarkShivakarXxhash             3000            566365 ns/op        9257.06 MB/s
 BenchmarkSiphash64                   500           2474141 ns/op        2119.07 MB/s
 BenchmarkSiphash128                  500           2480141 ns/op        2113.94 MB/s
@@ -78,7 +78,7 @@ BenchmarkAdler32-8                  1000           2320132 ns/op        2259.73 
 BenchmarkFNV32-8                     200           6040345 ns/op         867.98 MB/s
 BenchmarkFNV64-8                     200           6030345 ns/op         869.42 MB/s
 BenchmarkFNV128-8                     50          25181440 ns/op         208.20 MB/s
-BenchmarkCespareXxhash-8            3000            395355 ns/op        13261.16 MB/s
+BenchmarkCespareXxhash-8            3000            395355 ns/op       13261.16 MB/s
 BenchmarkShivakarXxhash-8           3000            569365 ns/op        9208.28 MB/s
 BenchmarkSiphash64-8                 500           2478141 ns/op        2115.65 MB/s
 BenchmarkSiphash128-8                500           2476141 ns/op        2117.36 MB/s
