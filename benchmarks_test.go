@@ -238,7 +238,7 @@ func BenchmarkCespareXxhash(b *testing.B) {
 }
 
 func shivakarXxhashNew() hash.Hash {
-	return shivakar_xxhash.New()
+	return shivakar_xxhash.NewXXHash64()
 }
 
 func BenchmarkShivakarXxhash(b *testing.B) {

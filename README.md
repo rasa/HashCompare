@@ -1,5 +1,34 @@
 # Comparison of Hashing Techniques for Bit Rot detection
 
+## Benchmarks
+
+```
+goos: windows
+goarch: amd64
+pkg: github.com/rasa/HashCompare
+BenchmarkHighwayHash256-8           3000            547364 ns/op        9578.40 MB/s
+BenchmarkHighwayHash128-8           3000            549031 ns/op        9549.33 MB/s
+BenchmarkHighwayHash64-8            3000            547698 ns/op        9572.57 MB/s
+BenchmarkSHA1-8                      100          10270588 ns/op         510.48 MB/s
+BenchmarkMD5-8                       200           7615435 ns/op         688.45 MB/s
+BenchmarkSHA512-8                    100          15730900 ns/op         333.29 MB/s
+BenchmarkSHA256-8                     50          25621466 ns/op         204.63 MB/s
+BenchmarkCRC32-8                    1000           1676095 ns/op        3128.03 MB/s
+BenchmarkCRC64-8                     500           3238185 ns/op        1619.08 MB/s
+BenchmarkAdler32-8                  1000           2323132 ns/op        2256.81 MB/s
+BenchmarkFNV32-8                     200           6030345 ns/op         869.42 MB/s
+BenchmarkFNV64-8                     200           6050346 ns/op         866.54 MB/s
+BenchmarkFNV128-8                     50          25141438 ns/op         208.54 MB/s
+BenchmarkCespareXxhash-8            3000            437691 ns/op        11978.48 MB/s
+BenchmarkShivakarXxhash-8           3000            604701 ns/op        8670.20 MB/s
+BenchmarkSiphash64-8                 500           2476141 ns/op        2117.36 MB/s
+BenchmarkSiphash128-8                500           2482142 ns/op        2112.24 MB/s
+BenchmarkBlake2b512-8                200           6740385 ns/op         777.83 MB/s
+BenchmarkBlake2b256-8                200           6710383 ns/op         781.31 MB/s
+PASS
+ok      github.com/rasa/HashCompare     34.030s
+```
+
 ## Introduction
 
 At [minio](github.com/minio/minio) we use a hash algorithm in order to detect bit rot for data blocks that are stored on disk. Thus far we have been using the Blake2b algorithm but recent developments have led us to do new research for a faster algorithm for bit rot protection.
