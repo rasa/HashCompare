@@ -17,13 +17,26 @@
 package main
 
 import (
+	// https://en.wikipedia.org/wiki/List_of_hash_functions#Cyclic_redundancy_checks
+	"hash/crc32"
+	"hash/crc64"
+	// https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions
+	"hash/fnv"
+	"github.com/cespare/xxhash"
+	// https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions
+	"github.com/minio/blake2b-simd"
+	"github.com/aead/poly1305"
+	"github.com/aead/siphash"
+	"github.com/minio/highwayhash"
+	// https://en.wikipedia.org/wiki/List_of_hash_functions#Unkeyed_cryptographic_hash_functions
+	"crypto/md5"
+	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/sha512"
+	
 	"container/heap"
 	"encoding/hex"
 	"fmt"
-	"github.com/aead/poly1305"
-	"github.com/aead/siphash"
-	"github.com/minio/blake2b-simd"
-	"github.com/minio/highwayhash"
 	"math/big"
 	"math/rand"
 	"os"
@@ -90,6 +103,54 @@ func HighwayHash64(buf []byte, key [32]byte) []byte {
 	return sum
 }
 
+func CRC32(buf []byte) []byte {
+	h := crc32.New(crc32.MakeTable(crc32.IEEE)) // or Castagnoli or Koopman
+	h.Reset()
+	h.Write(buf[:])
+	sum := h.Sum(nil)
+	return sum
+}
+
+func CRC64(buf []byte) []byte {
+	h := crc64.New(crc64.MakeTable(crc64.ISO)) // or ECMA
+	h.Reset()
+	h.Write(buf[:])
+	sum := h.Sum(nil)
+	return sum
+}
+
+func FNV32(buf []byte) []byte {
+	h := fnv.New32()
+	h.Reset()
+	h.Write(buf[:])
+	sum := h.Sum(nil)
+	return sum
+}
+
+func FNV64(buf []byte) []byte {
+	h := fnv.New64()
+	h.Reset()
+	h.Write(buf[:])
+	sum := h.Sum(nil)
+	return sum
+}
+
+func FNV128(buf []byte) []byte {
+	h := fnv.New128()
+	h.Reset()
+	h.Write(buf[:])
+	sum := h.Sum(nil)
+	return sum
+}
+
+func Xxhash(buf []byte) []byte {
+	h := xxhash.New()
+	h.Reset()
+	h.Write(buf[:])
+	sum := h.Sum(nil)
+	return sum
+}
+
 func mask(b, m int) byte {
 	s := uint(9 - m)
 	return byte(((1 << s) - 1) << uint(b%m))
@@ -144,6 +205,18 @@ func TestHashPermutationsRange(msg []byte, key [32]byte, cpu int, cpuShift uint,
 				tag = HighwayHash128(msg, key)
 			case "highwayhash64":
 				tag = HighwayHash64(msg, key)
+			case "crc32":
+				tag = CRC32(msg)
+			case "crc64":
+				tag = CRC64(msg)
+			case "fnv32":
+				tag = FNV32(msg)
+			case "fnv64":
+				tag = FNV64(msg)
+			case "fnv128":
+				tag = FNV128(msg)
+			case "xxhash":
+				tag = Xxhash(msg)
 			}
 
 			keys = append(keys, tag)
@@ -304,7 +377,13 @@ func main() {
 	//permuteAlgorithm("blake2b-256")
 	//permuteAlgorithm("poly1305")
 	//permuteAlgorithm("siphash")
-	permuteAlgorithm("highwayhash256")
-	permuteAlgorithm("highwayhash128")
+//	permuteAlgorithm("highwayhash256")
+//	permuteAlgorithm("highwayhash128")
 	//permuteAlgorithm("highwayhash64")
+	permuteAlgorithm("crc32")
+	permuteAlgorithm("crc64")
+	permuteAlgorithm("fnv32")
+	permuteAlgorithm("fnv128")
+	permuteAlgorithm("fnv256")
+	permuteAlgorithm("xxhash")
 }

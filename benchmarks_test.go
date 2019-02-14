@@ -17,6 +17,19 @@
 package main_test
 
 import (
+	// https://en.wikipedia.org/wiki/List_of_hash_functions#Cyclic_redundancy_checks
+	"hash/crc32"
+	"hash/crc64"
+	// https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions
+	"hash/fnv"
+	"github.com/cespare/xxhash"
+	// https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions
+	//"github.com/minio/blake2b-simd"
+	"github.com/aead/poly1305"
+	"github.com/aead/siphash"
+	// "github.com/minio/highwayhash"
+	// https://en.wikipedia.org/wiki/List_of_hash_functions#Unkeyed_cryptographic_hash_functions
+	
 	"crypto/md5"
 	"crypto/rand"
 	"crypto/sha1"
@@ -66,8 +79,12 @@ func BenchmarkSHA256_AVX512(b *testing.B) {
 	benchmarkAvx512(b, size)
 }
 
-func BenchmarkBlake2b(b *testing.B) {
+func BenchmarkBlake2b512(b *testing.B) {
 	benchmarkHashWithKey(b, blake2b.New512)
+}
+
+func BenchmarkBlake2b256(b *testing.B) {
+	benchmarkHashWithKey(b, blake2b.New256)
 }
 
 func BenchmarkSHA1(b *testing.B) {
@@ -117,4 +134,54 @@ func benchmarkAvx512(b *testing.B, size int) {
 
 		benchmarkAvx512SingleCore(h512, body)
 	}
+}
+
+func crc32New() {
+	return crc32.New(crc32.MakeTable(crc32.IEEE)) // or Castagnoli or Koopman
+}
+
+func BenchmarkCRC32(b *testing.B) {
+	benchmarkHash(b, crc32New)
+}
+
+func crc64New() {
+	return crc64.New(crc64.MakeTable(crc64.ISO)) // or ECMA
+}
+
+func BenchmarkCRC64(b *testing.B) {
+	benchmarkHash(b, crc64New)
+}
+
+func BenchmarkFNV32(b *testing.B) {
+	benchmarkHash(b, fnv.New32)
+}
+
+func BenchmarkFNV64(b *testing.B) {
+	benchmarkHash(b, fnv.New64)
+}
+
+func BenchmarkXxhash(b *testing.B) {
+	benchmarkHash(b, xxhash.New)
+}
+
+/*
+func BenchmarBlake2b256(b *testing.B) {
+	benchmarkHash(b, blake2b.New256)
+}
+
+func BenchmarBlake2b512(b *testing.B) {
+	benchmarkHash(b, blake2b.New512)
+}
+*/
+
+func BenchmarkPoly1305(b *testing.B) {
+	benchmarkHashWithKey(b, poly1305.New)
+}
+
+func BenchmarkSiphash64(b *testing.B) {
+	benchmarkHashWithKey(b, siphash.New64)
+}
+
+func BenchmarkSiphash128(b *testing.B) {
+	benchmarkHashWithKey(b, siphash.New128)
 }
