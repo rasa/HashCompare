@@ -28,8 +28,9 @@ import (
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Checksums
 	"hash/adler32"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions
-	"github.com/cespare/xxhash"
 	"hash/fnv"
+	cespare_xxhash "github.com/cespare/xxhash"
+	shivakar_xxhash "github.com/shivakar/xxhash"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions
 	"github.com/minio/blake2b-simd"
 	// "github.com/aead/poly1305" // doesn't implement BlockSize()
@@ -228,12 +229,20 @@ func BenchmarkFNV128(b *testing.B) {
 	benchmarkHash(b, fnvNew128)
 }
 
-func xxhashNew() hash.Hash {
-	return xxhash.New()
+func cespareXxhashNew() hash.Hash {
+	return cespare_xxhash.New()
 }
 
-func BenchmarkXxhash(b *testing.B) {
-	benchmarkHash(b, xxhashNew)
+func BenchmarkCespareXxhash(b *testing.B) {
+	benchmarkHash(b, cespareXxhashNew)
+}
+
+func shivakarXxhashNew() hash.Hash {
+	return shivakar_xxhash.New()
+}
+
+func BenchmarkShivakarXxhash(b *testing.B) {
+	benchmarkHash(b, shivakarXxhashNew)
 }
 
 /*
