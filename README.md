@@ -2,7 +2,7 @@
 
 ## Benchmarks
 
-### linux/amd64
+### linux/amd64 (cpus=1)
 ```
 goos: linux
 goarch: amd64
@@ -30,32 +30,62 @@ PASS
 ok      github.com/rasa/HashCompare     36.085s
 ```
 
-## windows/amd64
+### windows/amd64 (cpus=1)
+
 ```
 goos: windows
 goarch: amd64
 pkg: github.com/rasa/HashCompare
-BenchmarkHighwayHash256-8           3000            547364 ns/op        9578.40 MB/s
-BenchmarkHighwayHash128-8           3000            549031 ns/op        9549.33 MB/s
-BenchmarkHighwayHash64-8            3000            547698 ns/op        9572.57 MB/s
-BenchmarkSHA1-8                      100          10270588 ns/op         510.48 MB/s
-BenchmarkMD5-8                       200           7615435 ns/op         688.45 MB/s
-BenchmarkSHA512-8                    100          15730900 ns/op         333.29 MB/s
-BenchmarkSHA256-8                     50          25621466 ns/op         204.63 MB/s
-BenchmarkCRC32-8                    1000           1676095 ns/op        3128.03 MB/s
-BenchmarkCRC64-8                     500           3238185 ns/op        1619.08 MB/s
-BenchmarkAdler32-8                  1000           2323132 ns/op        2256.81 MB/s
-BenchmarkFNV32-8                     200           6030345 ns/op         869.42 MB/s
-BenchmarkFNV64-8                     200           6050346 ns/op         866.54 MB/s
-BenchmarkFNV128-8                     50          25141438 ns/op         208.54 MB/s
-BenchmarkCespareXxhash-8            3000            437691 ns/op       11978.48 MB/s
-BenchmarkShivakarXxhash-8           3000            604701 ns/op        8670.20 MB/s
-BenchmarkSiphash64-8                 500           2476141 ns/op        2117.36 MB/s
-BenchmarkSiphash128-8                500           2482142 ns/op        2112.24 MB/s
-BenchmarkBlake2b512-8                200           6740385 ns/op         777.83 MB/s
-BenchmarkBlake2b256-8                200           6710383 ns/op         781.31 MB/s
+BenchmarkHighwayHash256             3000            543697 ns/op        9643.00 MB/s
+BenchmarkHighwayHash128             3000            545031 ns/op        9619.41 MB/s
+BenchmarkHighwayHash64              3000            544031 ns/op        9637.10 MB/s
+BenchmarkSHA1                        100          10300589 ns/op         508.99 MB/s
+BenchmarkMD5                         200           7610435 ns/op         688.91 MB/s
+BenchmarkSHA512                      100          15740901 ns/op         333.07 MB/s
+BenchmarkSHA256                       50          25681468 ns/op         204.15 MB/s
+BenchmarkCRC32                      1000           1681096 ns/op        3118.73 MB/s
+BenchmarkCRC64                       500           3240185 ns/op        1618.08 MB/s
+BenchmarkAdler32                    1000           2323132 ns/op        2256.81 MB/s
+BenchmarkFNV32                       200           6040345 ns/op         867.98 MB/s
+BenchmarkFNV64                       200           6040345 ns/op         867.98 MB/s
+BenchmarkFNV128                       50          25141438 ns/op         208.54 MB/s
+BenchmarkCespareXxhash              5000            391022 ns/op        13408.13 MB/s
+BenchmarkShivakarXxhash             3000            566365 ns/op        9257.06 MB/s
+BenchmarkSiphash64                   500           2474141 ns/op        2119.07 MB/s
+BenchmarkSiphash128                  500           2480141 ns/op        2113.94 MB/s
+BenchmarkBlake2b512                  200           6760386 ns/op         775.53 MB/s
+BenchmarkBlake2b256                  200           6715384 ns/op         780.73 MB/s
 PASS
-ok      github.com/rasa/HashCompare     34.030s
+ok      github.com/rasa/HashCompare     34.548s
+```
+
+### windows/amd64 (cpus=8)
+
+```
+goos: windows
+goarch: amd64
+pkg: github.com/rasa/HashCompare
+BenchmarkHighwayHash256-8           3000            548364 ns/op        9560.94 MB/s
+BenchmarkHighwayHash128-8           3000            547364 ns/op        9578.40 MB/s
+BenchmarkHighwayHash64-8            3000            554031 ns/op        9463.14 MB/s
+BenchmarkSHA1-8                      100          10430597 ns/op         502.64 MB/s
+BenchmarkMD5-8                       200           7680439 ns/op         682.63 MB/s
+BenchmarkSHA512-8                    100          15940912 ns/op         328.89 MB/s
+BenchmarkSHA256-8                     50          26521516 ns/op         197.68 MB/s
+BenchmarkCRC32-8                    1000           1684096 ns/op        3113.17 MB/s
+BenchmarkCRC64-8                     500           3236185 ns/op        1620.08 MB/s
+BenchmarkAdler32-8                  1000           2320132 ns/op        2259.73 MB/s
+BenchmarkFNV32-8                     200           6040345 ns/op         867.98 MB/s
+BenchmarkFNV64-8                     200           6030345 ns/op         869.42 MB/s
+BenchmarkFNV128-8                     50          25181440 ns/op         208.20 MB/s
+BenchmarkCespareXxhash-8            3000            395355 ns/op        13261.16 MB/s
+BenchmarkShivakarXxhash-8           3000            569365 ns/op        9208.28 MB/s
+BenchmarkSiphash64-8                 500           2478141 ns/op        2115.65 MB/s
+BenchmarkSiphash128-8                500           2476141 ns/op        2117.36 MB/s
+BenchmarkBlake2b512-8                200           6710384 ns/op         781.31 MB/s
+BenchmarkBlake2b256-8                200           6705383 ns/op         781.89 MB/s
+PASS
+ok      github.com/rasa/HashCompare     33.928s
 ```
 
 ## Introduction
