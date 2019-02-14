@@ -16,20 +16,25 @@
 
 package main_test
 
+/*
+test with:
+$ go test -bench=.
+*/
+
 import (
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Cyclic_redundancy_checks
 	"hash/crc32"
 	"hash/crc64"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions
-	"hash/fnv"
 	"github.com/cespare/xxhash"
+	"hash/fnv"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions
-	//"github.com/minio/blake2b-simd"
-	"github.com/aead/poly1305"
+	"github.com/minio/blake2b-simd"
+	// "github.com/aead/poly1305" // doesn't implement BlockSize()
 	"github.com/aead/siphash"
 	// "github.com/minio/highwayhash"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Unkeyed_cryptographic_hash_functions
-	
+
 	"crypto/md5"
 	"crypto/rand"
 	"crypto/sha1"
@@ -37,7 +42,11 @@ import (
 	"crypto/sha512"
 	"github.com/minio/highwayhash"
 	sha256Avx512 "github.com/minio/sha256-simd"
+	/* on windows:
+	golang.org/x/crypto/blake2b.supportsAVX2: relocation target runtime.support_avx2 not defined
+	golang.org/x/crypto/blake2b.supportsAVX: relocation target runtime.support_avx not defined
 	"golang.org/x/crypto/blake2b"
+	*/
 	"hash"
 	"testing"
 )
@@ -46,6 +55,20 @@ const size = 5 * 1024 * 1024
 
 func benchmarkHashWithKey(b *testing.B, hash func(key []byte) (hash.Hash, error)) {
 	var key [32]byte
+	data := make([]byte, size)
+	rand.Read(data)
+
+	b.SetBytes(size)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		h, _ := hash(key[:])
+		h.Write(data)
+		h.Sum(nil)
+	}
+}
+
+func benchmarkHashWithKey16(b *testing.B, hash func(key []byte) (hash.Hash, error)) {
+	var key [16]byte
 	data := make([]byte, size)
 	rand.Read(data)
 
@@ -71,13 +94,31 @@ func benchmarkHash(b *testing.B, hash func() hash.Hash) {
 	}
 }
 
-func BenchmarkHighwayHash(b *testing.B) {
+func BenchmarkHighwayHash256(b *testing.B) {
 	benchmarkHashWithKey(b, highwayhash.New)
 }
 
+func BenchmarkHighwayHash128(b *testing.B) {
+	benchmarkHashWithKey(b, highwayhash.New128)
+}
+
+func highwayhashNew64(key []byte) (hash.Hash, error) {
+	return highwayhash.New64(key)
+}
+
+func BenchmarkHighwayHash64(b *testing.B) {
+	benchmarkHashWithKey(b, highwayhashNew64)
+}
+
 func BenchmarkSHA256_AVX512(b *testing.B) {
+	b.Skip("panics on windows")
 	benchmarkAvx512(b, size)
 }
+
+/*
+// on windows:
+golang.org/x/crypto/blake2b.supportsAVX2: relocation target runtime.support_avx2 not defined
+golang.org/x/crypto/blake2b.supportsAVX: relocation target runtime.support_avx not defined
 
 func BenchmarkBlake2b512(b *testing.B) {
 	benchmarkHashWithKey(b, blake2b.New512)
@@ -86,6 +127,7 @@ func BenchmarkBlake2b512(b *testing.B) {
 func BenchmarkBlake2b256(b *testing.B) {
 	benchmarkHashWithKey(b, blake2b.New256)
 }
+*/
 
 func BenchmarkSHA1(b *testing.B) {
 	benchmarkHash(b, sha1.New)
@@ -136,7 +178,7 @@ func benchmarkAvx512(b *testing.B, size int) {
 	}
 }
 
-func crc32New() {
+func crc32New() hash.Hash {
 	return crc32.New(crc32.MakeTable(crc32.IEEE)) // or Castagnoli or Koopman
 }
 
@@ -144,7 +186,7 @@ func BenchmarkCRC32(b *testing.B) {
 	benchmarkHash(b, crc32New)
 }
 
-func crc64New() {
+func crc64New() hash.Hash {
 	return crc64.New(crc64.MakeTable(crc64.ISO)) // or ECMA
 }
 
@@ -152,16 +194,36 @@ func BenchmarkCRC64(b *testing.B) {
 	benchmarkHash(b, crc64New)
 }
 
+func fnvNew32() hash.Hash {
+	return fnv.New32()
+}
+
 func BenchmarkFNV32(b *testing.B) {
-	benchmarkHash(b, fnv.New32)
+	benchmarkHash(b, fnvNew32)
+}
+
+func fnvNew64() hash.Hash {
+	return fnv.New64()
 }
 
 func BenchmarkFNV64(b *testing.B) {
-	benchmarkHash(b, fnv.New64)
+	benchmarkHash(b, fnvNew64)
+}
+
+func fnvNew128() hash.Hash {
+	return fnv.New128()
+}
+
+func BenchmarkFNV128(b *testing.B) {
+	benchmarkHash(b, fnvNew128)
+}
+
+func xxhashNew() hash.Hash {
+	return xxhash.New()
 }
 
 func BenchmarkXxhash(b *testing.B) {
-	benchmarkHash(b, xxhash.New)
+	benchmarkHash(b, xxhashNew)
 }
 
 /*
@@ -174,14 +236,38 @@ func BenchmarBlake2b512(b *testing.B) {
 }
 */
 
+/*
+// doesn't implement BlockSize()
+func poly1305New() hash.Hash {
+	return &poly1305.New()
+}
+
 func BenchmarkPoly1305(b *testing.B) {
-	benchmarkHashWithKey(b, poly1305.New)
+	benchmarkHashWithKey(b, poly1305New)
+}
+*/
+
+func siphashNew64(key []byte) (hash.Hash, error) {
+	return siphash.New64(key)
 }
 
 func BenchmarkSiphash64(b *testing.B) {
-	benchmarkHashWithKey(b, siphash.New64)
+	benchmarkHashWithKey16(b, siphashNew64)
+}
+
+func siphashNew128(key []byte) (hash.Hash, error) {
+	return siphash.New128(key)
 }
 
 func BenchmarkSiphash128(b *testing.B) {
-	benchmarkHashWithKey(b, siphash.New128)
+	benchmarkHashWithKey16(b, siphashNew128)
+}
+
+// 	"github.com/minio/blake2b-simd"
+func BenchmarkBlake2b512(b *testing.B) {
+	benchmarkHash(b, blake2b.New512)
+}
+
+func BenchmarkBlake2b256(b *testing.B) {
+	benchmarkHash(b, blake2b.New256)
 }

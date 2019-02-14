@@ -21,19 +21,19 @@ import (
 	"hash/crc32"
 	"hash/crc64"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions
-	"hash/fnv"
 	"github.com/cespare/xxhash"
+	"hash/fnv"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions
-	"github.com/minio/blake2b-simd"
 	"github.com/aead/poly1305"
 	"github.com/aead/siphash"
+	"github.com/minio/blake2b-simd"
 	"github.com/minio/highwayhash"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Unkeyed_cryptographic_hash_functions
-	"crypto/md5"
-	"crypto/sha1"
-	"crypto/sha256"
-	"crypto/sha512"
-	
+	//"crypto/md5"
+	//"crypto/sha1"
+	//"crypto/sha256"
+	//"crypto/sha512"
+
 	"container/heap"
 	"encoding/hex"
 	"fmt"
@@ -377,13 +377,12 @@ func main() {
 	//permuteAlgorithm("blake2b-256")
 	//permuteAlgorithm("poly1305")
 	//permuteAlgorithm("siphash")
-//	permuteAlgorithm("highwayhash256")
-//	permuteAlgorithm("highwayhash128")
+	permuteAlgorithm("highwayhash256")
+	//	permuteAlgorithm("highwayhash128")
 	//permuteAlgorithm("highwayhash64")
-	permuteAlgorithm("crc32")
-	permuteAlgorithm("crc64")
-	permuteAlgorithm("fnv32")
-	permuteAlgorithm("fnv128")
-	permuteAlgorithm("fnv256")
+	//permuteAlgorithm("crc32")
+	//permuteAlgorithm("crc64")
+	//permuteAlgorithm("fnv32")
+	//permuteAlgorithm("fnv128")
 	permuteAlgorithm("xxhash")
 }
