@@ -33,18 +33,21 @@ import (
 	shivakar_xxhash "github.com/shivakar/xxhash"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions
 	"github.com/minio/blake2b-simd"
+	'golang.org/x/crypto/blake2s"
 	// "github.com/aead/poly1305" // doesn't implement BlockSize()
 	"github.com/aead/siphash"
 	// "github.com/minio/highwayhash"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Unkeyed_cryptographic_hash_functions
-
+	"golang.org/x/crypto/md4"
 	"crypto/md5"
 	"crypto/rand"
+	"golang.org/x/crypto/ripemd160"
 	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
 	"github.com/minio/highwayhash"
 	sha256Avx512 "github.com/minio/sha256-simd"
+	"golang.org/x/crypto/sha3"
 	/* on windows:
 	golang.org/x/crypto/blake2b.supportsAVX2: relocation target runtime.support_avx2 not defined
 	golang.org/x/crypto/blake2b.supportsAVX: relocation target runtime.support_avx not defined
@@ -132,12 +135,28 @@ func BenchmarkBlake2b256(b *testing.B) {
 }
 */
 
+func BenchmarkBlake2s128(b *testing.B) {
+	benchmarkHashWithKey(b, blake2s.New128)
+}
+
+func BenchmarkBlake2s256(b *testing.B) {
+	benchmarkHashWithKey(b, blake2s.New256)
+}
+
 func BenchmarkSHA1(b *testing.B) {
 	benchmarkHash(b, sha1.New)
 }
 
+func BenchmarkMD4(b *testing.B) {
+	benchmarkHash(b, md4.New)
+}
+
 func BenchmarkMD5(b *testing.B) {
 	benchmarkHash(b, md5.New)
+}
+
+func BenchmarkRipemd160(b *testing.B) {
+	benchmarkHash(b, ripemd160.New)
 }
 
 func BenchmarkSHA512(b *testing.B) {
@@ -146,6 +165,22 @@ func BenchmarkSHA512(b *testing.B) {
 
 func BenchmarkSHA256(b *testing.B) {
 	benchmarkHash(b, sha256.New)
+}
+
+func BenchmarkSHA3_224(b *testing.B) {
+	benchmarkHash(b, sha3.New224)
+}
+
+func BenchmarkSHA3_256(b *testing.B) {
+	benchmarkHash(b, sha3.New256)
+}
+
+func BenchmarkSHA3_384(b *testing.B) {
+	benchmarkHash(b, sha3.New384)
+}
+
+func BenchmarkSHA3_512(b *testing.B) {
+	benchmarkHash(b, sha3.New512)
 }
 
 // AVX512 code below
