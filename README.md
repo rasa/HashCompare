@@ -1,5 +1,9 @@
 # Comparison of Hashing Techniques for Bit Rot detection
 
+## See Also
+
+https://github.com/yasushi-saito/go-hash-shootout
+
 ## Benchmarks
 
 ### linux/amd64 (cpus=1)
