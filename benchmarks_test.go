@@ -33,7 +33,7 @@ import (
 	shivakar_xxhash "github.com/shivakar/xxhash"
 	// https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions
 	"github.com/minio/blake2b-simd"
-	'golang.org/x/crypto/blake2s"
+	"golang.org/x/crypto/blake2s"
 	// "github.com/aead/poly1305" // doesn't implement BlockSize()
 	"github.com/aead/siphash"
 	// "github.com/minio/highwayhash"
